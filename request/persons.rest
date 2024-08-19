@@ -1,0 +1,22 @@
+# @baseUrl = http://localhost:3001
+@baseUrl = https://fullstackopen-part3-patient-glitter-555.fly.dev
+
+GET {{baseUrl}}/api/persons
+
+###
+GET {{baseUrl}}/info
+
+###
+GET {{baseUrl}}/api/persons/4
+
+###
+DELETE  {{baseUrl}}/api/persons/1
+
+###
+POST {{baseUrl}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "aaa",
+    "number": "123"
+}
