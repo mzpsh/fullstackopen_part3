@@ -1,5 +1,5 @@
-# @baseUrl = http://localhost:3001
-@baseUrl = https://fullstackopen-part3-patient-glitter-555.fly.dev
+@baseUrl = http://localhost:3001
+# @baseUrl = https://fullstackopen-part3-patient-glitter-555.fly.dev
 
 GET {{baseUrl}}/api/persons
 
@@ -7,7 +7,7 @@ GET {{baseUrl}}/api/persons
 GET {{baseUrl}}/info
 
 ###
-GET {{baseUrl}}/api/persons/4
+GET {{baseUrl}}/api/persons/66cb4b2236ae537933e651b2
 
 ###
 DELETE  {{baseUrl}}/api/persons/1

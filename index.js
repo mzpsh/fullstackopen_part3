@@ -1,6 +1,8 @@
 const express = require("express")
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+
 const app = express()
 
 app.use(express.static('dist'))
@@ -45,20 +47,19 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(result => {
+        res.json(result)
+      })
 })
 
 app.get('/api/persons/:id', (req, res) => {
   const id = req.params.id
-  const person = persons.find(person => person.id === id);
-
-  console.log(typeof id)
-
-  if (person) {
-    res.json(person)
-  } else {
+  Person.findById(id).then(result => {
+    res.json(result)
+  }).catch(error => {
     res.status(404).end()
-  }
+    console.log(error.message)
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -70,31 +71,37 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-  const person = {
+  const personJson = {
     id: Math.floor((Math.random() * 1000)).toString(),
     ...req.body
   }
 
-  if (person.name && person.number) {
-    if (persons.filter((insidePerson) => insidePerson.name === person.name).length > 0) {
-      res
-        .status(400)
-        .json({
-          "error": "name already exists"
-        })
-    } else {
-      persons.push(person)
-      res.json(person)
-    }
-  } else {
-    res
-      .status(400)
-      .json({
-        "error": "name or number is missing"
-      })
-  }
+  const newPerson = new Person(personJson)
 
-  console.log(persons)
+  newPerson.save()
+    .then(result => {
+      res.json(result)
+    })
+
+  // if (person.name && person.number) {
+  //   if (persons.filter((insidePerson) => insidePerson.name === person.name).length > 0) {
+  //     res
+  //       .status(400)
+  //       .json({
+  //         "error": "name already exists"
+  //       })
+  //   } else {
+  //     persons.push(person)
+  //     res.json(person)
+  //   }
+  // } else {
+  //   res
+  //     .status(400)
+  //     .json({
+  //       "error": "name or number is missing"
+  //     })
+  // }
+
 })
 
 const PORT = process.env.PORT || 3001
