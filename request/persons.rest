@@ -6,11 +6,14 @@ GET {{baseUrl}}/api/persons
 ###
 GET {{baseUrl}}/info
 
-###
-GET {{baseUrl}}/api/persons/66cb4b2236ae537933e651b2
+### Get a person
+GET {{baseUrl}}/api/persons/66cb61284531433bf01c3f84
 
-###
-DELETE  {{baseUrl}}/api/persons/1
+### Get a person with missing id
+GET {{baseUrl}}/api/persons/66cb4b2236ae537933e651bs
+
+### 
+DELETE  {{baseUrl}}/api/persons/66d99e98cde83511dcf2922c
 
 ###
 POST {{baseUrl}}/api/persons
@@ -18,5 +21,5 @@ Content-Type: application/json
 
 {
     "name": "aaa",
-    "number": "123"
+    "number": "0869"
 }
