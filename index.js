@@ -1,4 +1,4 @@
-const express = require("express")
+const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
@@ -9,34 +9,34 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(cors())
 
-morgan.token('body', (req, res) => JSON.stringify(req.body))
+morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.get('/info', (req, res, next) => {
-    const now = new Date()
-    Person.find({})
-      .then(result => {
-        const count = result.length
-        res.send(
-          `
+  const now = new Date()
+  Person.find({})
+    .then(result => {
+      const count = result.length
+      res.send(
+        `
           <p> Phonebook has info for ${count} people</p>
           <p>${now.toString()}</p>
           `
       )
-      })
-      .catch(error => {
-        next(error)
-      })
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
-app.get('/api/persons', (req, res) => {
-    Person.find({})
-      .then(result => {
-        res.json(result)
-      })
-      .catch(error => {
-        next(error)
-      })
+app.get('/api/persons', (req, res, next) => {
+  Person.find({})
+    .then(result => {
+      res.json(result)
+    })
+    .catch(error => {
+      next(error)
+    })
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
@@ -52,7 +52,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
 
   Person.findByIdAndDelete(id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => {
@@ -67,12 +67,12 @@ app.post('/api/persons', (req, res, next) => {
     ...req.body
   }
 
-  Person.findOneAndUpdate({name: name}, personJson, { new: true, runValidators: true, context: 'query'})
+  Person.findOneAndUpdate({ name: name }, personJson, { new: true, runValidators: true, context: 'query' })
     .then(result => {
       if (result !== null) {
         return result
       }
-      const newPerson = new Person(personJson);
+      const newPerson = new Person(personJson)
       return newPerson.save()
     })
     .then(result => {
@@ -85,7 +85,7 @@ app.post('/api/persons', (req, res, next) => {
 
 })
 
-const erorrHandler = (error, req, res, next) => {
+const erorrHandler = (error, req, res) => {
   console.log(error.name)
   console.log(error.message)
 
@@ -98,7 +98,7 @@ const erorrHandler = (error, req, res, next) => {
       error: error.message,
     })
   } else {
-    res.status(500).end() 
+    res.status(500).end()
   }
   // return res.status(500).end()
 }
@@ -107,5 +107,5 @@ app.use(erorrHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`App is listening on port ${PORT}`)
+  console.log(`App is listening on port ${PORT}`)
 })
