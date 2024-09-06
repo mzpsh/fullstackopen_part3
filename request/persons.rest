@@ -15,11 +15,28 @@ GET {{baseUrl}}/api/persons/66cb4b2236ae537933e651bs
 ### 
 DELETE  {{baseUrl}}/api/persons/66d99e98cde83511dcf2922c
 
-###
+### Send different name
+POST {{baseUrl}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "aadsda",
+    "number": "0869"
+}
+### Send same name
 POST {{baseUrl}}/api/persons
 Content-Type: application/json
 
 {
     "name": "aaa",
+    "number": "141241242"
+}
+
+### Send wrong format to test validation
+POST {{baseUrl}}/api/persons
+Content-Type: application/json
+
+{
+    "name": "adsa",
     "number": "0869"
 }

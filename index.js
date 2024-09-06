@@ -64,45 +64,24 @@ app.delete('/api/persons/:id', (req, res, next) => {
 app.post('/api/persons', (req, res, next) => {
   const name = req.body.name
   const personJson = {
-    // id: Math.floor((Math.random() * 1000)).toString(),
     ...req.body
   }
 
-  // const newPerson = new Person(personJson)
-
-  // newPerson.save()
-  //   .then(result => {
-  //     res.json(result)
-  //   })
-  //   .catch(error => {
-  //     next(error)
-  //   })
-  Person.findOneAndUpdate({name: name}, personJson, { new: true })
+  Person.findOneAndUpdate({name: name}, personJson, { new: true, runValidators: true, context: 'query'})
     .then(result => {
+      if (result !== null) {
+        return result
+      }
+      const newPerson = new Person(personJson);
+      return newPerson.save()
+    })
+    .then(result => {
+      console.log(result)
       res.json(result)
     })
     .catch(error => {
-      next(error);
+      next(error)
     })
-
-  // if (person.name && person.number) {
-  //   if (persons.filter((insidePerson) => insidePerson.name === person.name).length > 0) {
-  //     res
-  //       .status(400)
-  //       .json({
-  //         "error": "name already exists"
-  //       })
-  //   } else {
-  //     persons.push(person)
-  //     res.json(person)
-  //   }
-  // } else {
-  //   res
-  //     .status(400)
-  //     .json({
-  //       "error": "name or number is missing"
-  //     })
-  // }
 
 })
 
@@ -114,8 +93,12 @@ const erorrHandler = (error, req, res, next) => {
     res.status(400).send({
       error: 'malformatted id'
     })
+  } else if(error.name === 'ValidationError') {
+    res.status(400).send({
+      error: error.message,
+    })
   } else {
-    res.status(500).end()
+    res.status(500).end() 
   }
   // return res.status(500).end()
 }
